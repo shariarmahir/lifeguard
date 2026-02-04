@@ -1,1297 +1,1001 @@
-{{-- Premium Doctor Portal - Advanced Modern Design --}}
 @extends('layouts.app')
 
-@section('title', 'Premium Doctor Portal - Shifa Healthcare')
+@section('title', 'Live Doctor Portal')
 
-@section('description', 'Advanced premium doctor portal for managing patients, appointments, telemedicine, and AI-powered healthcare services.')
-@section('keywords', 'premium doctor portal, telemedicine, healthcare management, video consultation, doctor community')
-@section('og_title', 'Premium Doctor Portal - Shifa Healthcare')
-@section('og_description', 'Advanced medical dashboard with premium features for healthcare professionals')
-@section('og_image', asset('images/premium-doctor-portal.jpg'))
-@section('twitter_title', 'Premium Doctor Portal - Shifa Healthcare')
-@section('twitter_description', 'Advanced medical dashboard with premium features')
-@section('twitter_image', asset('images/premium-doctor-portal-twitter.jpg'))
+@section('description', 'Connect with expert doctors instantly through audio, video, or text consultation. Available 24/7 for your healthcare needs.')
 
-@section('head')
-    <!-- Additional styles for premium doctor portal -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- AOS Animation Library -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <style>
-        /* Premium Doctor Portal Custom Styles */
-        .portal-container {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-            position: relative;
-            overflow: hidden;
-        }
+@push('head')
+<style>
+    /* Premium Doctor Portal Styles */
+    .doctor-portal-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
+        position: relative;
+        overflow: hidden;
+    }
 
-        .portal-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background:
-                radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
-            z-index: 1;
-        }
+    .doctor-portal-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        opacity: 0.3;
+    }
 
-        .portal-wrapper {
-            position: relative;
-            z-index: 2;
-        }
+    .doctor-card-premium {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+        backdrop-filter: blur(20px);
+        border-radius: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
 
-        /* Premium Sidebar */
-        .sidebar-premium {
-            background: linear-gradient(180deg, rgba(30, 58, 138, 0.95) 0%, rgba(37, 99, 235, 0.9) 100%);
-            color: white;
-            min-height: 100vh;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-        }
+    .doctor-card-premium::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
 
-        .sidebar-premium::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--blue-500), var(--purple-500), var(--violet-500));
-            border-radius: 0 0 2px 2px;
-        }
+    .doctor-card-premium:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+    }
 
-        /* Premium Navigation */
-        .nav-item-premium {
-            display: flex;
-            align-items: center;
-            padding: 1rem 1.5rem;
-            border-radius: 1rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            margin: 0.5rem 1rem;
-            color: rgba(255, 255, 255, 0.85);
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
-        }
+    .doctor-card-premium:hover::before {
+        left: 100%;
+    }
 
-        .nav-item-premium::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            transition: width 0.3s ease;
-        }
+    .online-indicator {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
 
-        .nav-item-premium:hover {
-            color: white;
-            transform: translateX(10px);
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-        }
-
-        .nav-item-premium:hover::before {
-            width: 100%;
-        }
-
-        .nav-item-premium.active {
-            background: linear-gradient(90deg, rgba(59, 130, 246, 0.4), rgba(37, 99, 235, 0.3));
-            color: white;
-            border-left: 4px solid #3b82f6;
-            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
-        }
-
-        .nav-icon-premium {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            flex-shrink: 0;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 0.75rem;
-            padding: 0.5rem;
-        }
-
-        /* Premium Main Content */
-        .main-content-premium {
-            flex: 1;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(10px);
-            border-left: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        /* Premium Dashboard Cards */
-        .dashboard-card-premium {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-            border-radius: 2rem;
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(20px);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .dashboard-card-premium:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
-            border-color: rgba(59, 130, 246, 0.3);
-        }
-
-        /* Premium Stat Cards */
-        .stat-card-premium {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(37, 99, 235, 0.8));
-            color: white;
-            border-radius: 1.5rem;
-            padding: 2rem;
-            min-height: 160px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card-premium::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .stat-card-premium:hover::before {
-            left: 100%;
-        }
-
-        .stat-card-premium.green {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.8));
-            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.3);
-        }
-
-        .stat-card-premium.purple {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(124, 58, 237, 0.8));
-            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.3);
-        }
-
-        .stat-card-premium.orange {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.9), rgba(217, 119, 6, 0.8));
-            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.3);
-        }
-
-        .stat-number-premium {
-            font-size: 3rem;
-            font-weight: 900;
-            line-height: 1;
-            background: linear-gradient(135deg, white, #e2e8f0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Premium Doctor Cards */
-        .doctor-card-premium {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .doctor-card-premium::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--blue-500), var(--purple-500));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .doctor-card-premium:hover {
-            transform: translateY(-5px);
-            border-color: rgba(59, 130, 246, 0.3);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-        }
-
-        .doctor-card-premium:hover::before {
+    @keyframes pulse {
+        0%, 100% {
             opacity: 1;
         }
-
-        .doctor-avatar-premium {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid rgba(59, 130, 246, 0.3);
-            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+        50% {
+            opacity: 0.5;
         }
+    }
 
-        .online-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #10b981, #059669);
-            box-shadow: 0 0 15px #10b981;
-            animation: pulse 2s infinite;
+    .doctor-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid white;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        object-fit: cover;
+    }
+
+    .specialty-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        border-radius: 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #1e40af;
+    }
+
+    .rating-stars {
+        display: flex;
+        gap: 0.25rem;
+    }
+
+    .rating-star {
+        color: #fbbf24;
+        font-size: 1.25rem;
+    }
+
+    .consultation-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: 700;
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+        font-size: 0.875rem;
+        border: none;
+        cursor: pointer;
+    }
+
+    .consultation-btn-audio {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .consultation-btn-audio:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+    }
+
+    .consultation-btn-video {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    .consultation-btn-video:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
+    }
+
+    .consultation-btn-text {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        color: white;
+        box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+    }
+
+    .consultation-btn-text:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4);
+    }
+
+    .filter-section {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+        backdrop-filter: blur(20px);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .emergency-banner {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        color: white;
+        box-shadow: 0 20px 60px rgba(220, 38, 38, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .emergency-banner::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        animation: emergency-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes emergency-pulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 1;
         }
-
-        /* Premium Service Cards */
-        .service-card-premium {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border-radius: 1.5rem;
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+        50% {
+            transform: scale(1.2);
+            opacity: 0.5;
         }
+    }
 
-        .service-card-premium::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: rotate(45deg);
-            transition: transform 0.6s ease;
+    .community-card {
+        background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .community-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+    }
+
+    .premium-service-card {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .premium-service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+    }
+
+    .stats-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #1e40af;
+    }
+
+    .filter-btn {
+        padding: 0.75rem 1.5rem;
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        border-color: transparent;
+        transform: translateY(-2px);
+    }
+
+    .live-indicator-dot {
+        width: 12px;
+        height: 12px;
+        background: #10b981;
+        border-radius: 50%;
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        animation: live-pulse 2s infinite;
+    }
+
+    @keyframes live-pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
         }
-
-        .service-card-premium:hover::after {
-            transform: rotate(45deg) translate(20%, 20%);
+        70% {
+            box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
         }
-
-        .service-icon-premium {
-            width: 70px;
-            height: 70px;
-            border-radius: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 2rem;
-            background: linear-gradient(135deg, var(--blue-500), var(--purple-500));
-            color: white;
-            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.3);
+        100% {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
         }
-
-        .service-price {
-            font-size: 2rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--blue-500), var(--purple-500));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 1rem 0;
-        }
-
-        /* Premium Community Section */
-        .community-card-premium {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.05));
-            border-radius: 2rem;
-            padding: 2.5rem;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .community-card-premium::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--purple-500), var(--violet-500));
-        }
-
-        /* Premium Emergency Card */
-        .emergency-card-premium {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
-            border-radius: 2rem;
-            padding: 2.5rem;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .emergency-card-premium::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #ef4444, #dc2626);
-        }
-
-        /* Premium Button Styles */
-        .btn-request-premium {
-            background: linear-gradient(135deg, var(--blue-500), var(--purple-500));
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
-        }
-
-        .btn-request-premium::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn-request-premium:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.4);
-        }
-
-        .btn-request-premium:hover::before {
-            left: 100%;
-        }
-
-        .btn-request-premium.emergency {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-request-premium.emergency:hover {
-            box-shadow: 0 15px 40px rgba(239, 68, 68, 0.4);
-        }
-
-        /* Premium Call Action Buttons */
-        .call-action-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .call-action-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
-            border-radius: 50%;
-        }
-
-        .call-action-btn:hover {
-            transform: scale(1.1) translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-        }
-
-        .call-action-btn.audio {
-            background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
-        }
-
-        .call-action-btn.video {
-            background: linear-gradient(135deg, var(--purple-500), var(--purple-600));
-        }
-
-        .call-action-btn.message {
-            background: linear-gradient(135deg, var(--green-500), var(--green-600));
-        }
-
-        /* Premium Rating Stars */
-        .rating-stars-premium {
-            display: flex;
-            gap: 0.25rem;
-        }
-
-        .star-premium {
-            color: #fbbf24;
-            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-        }
-
-        .star-premium.filled {
-            text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
-        }
-
-        /* Premium Chat Window */
-        .chat-window-premium {
-            height: 500px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-            border-radius: 2rem;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(20px);
-        }
-
-        /* Premium Search Input */
-        .search-input-premium {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1rem;
-            padding: 1rem 1.5rem 1rem 3.5rem;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .search-input-premium:focus {
-            outline: none;
-            border-color: var(--blue-500);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        /* Premium Animations */
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        @keyframes glow {
-            0%, 100% {
-                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-            }
-            50% {
-                box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
-            }
-        }
-
-        /* Floating Elements */
-        .floating-element {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .glowing-element {
-            animation: glow 2s ease-in-out infinite;
-        }
-
-        /* Premium Scrollbar */
-        .premium-scrollbar::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .premium-scrollbar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
-        }
-
-        .premium-scrollbar::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, var(--blue-500), var(--purple-500));
-            border-radius: 4px;
-        }
-
-        .premium-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, var(--blue-600), var(--purple-600));
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .sidebar-premium {
-                width: 280px;
-                position: fixed;
-                left: -280px;
-                z-index: 1000;
-            }
-
-            .sidebar-premium.mobile-open {
-                left: 0;
-                box-shadow: 10px 0 50px rgba(0, 0, 0, 0.4);
-            }
-
-            .main-content-premium {
-                padding: 1.5rem;
-            }
-
-            .stat-number-premium {
-                font-size: 2.5rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .dashboard-card-premium {
-                padding: 1.5rem;
-            }
-
-            .stat-card-premium {
-                padding: 1.5rem;
-                min-height: 140px;
-            }
-
-            .service-card-premium {
-                padding: 1.5rem;
-            }
-
-            .doctor-avatar-premium {
-                width: 60px;
-                height: 60px;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .main-content-premium {
-                padding: 1rem;
-            }
-
-            .dashboard-card-premium {
-                padding: 1rem;
-                border-radius: 1.5rem;
-            }
-
-            .stat-number-premium {
-                font-size: 2rem;
-            }
-
-            .call-action-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 1.25rem;
-            }
-        }
-
-        /* Glass Effect Enhancement */
-        .glass-effect-premium {
-            backdrop-filter: blur(20px);
-            background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.1) 0%,
-                rgba(255, 255, 255, 0.05) 50%,
-                rgba(255, 255, 255, 0.02) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Gradient Text */
-        .text-gradient-premium {
-            background: linear-gradient(135deg, var(--blue-500) 0%, var(--purple-500) 50%, var(--violet-500) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            background-size: 200% 200%;
-            animation: gradient-shift 3s ease infinite;
-        }
-
-        /* Premium Notification Badge */
-        .notification-badge-premium {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
-            animation: glow 1.5s ease-in-out infinite;
-        }
-    </style>
-@endsection
+    }
+</style>
+@endpush
 
 @section('content')
-<div x-data="premiumDoctorPortal()" class="portal-container flex" :class="{ 'sidebar-collapsed': collapsed }">
-    <!-- Premium Sidebar Navigation -->
-    <div class="sidebar-premium w-80 flex-shrink-0" :class="mobileMenuOpen ? 'mobile-open' : ''">
-        <div class="p-6 h-full flex flex-col">
-            <!-- Premium Doctor Profile -->
-            <div class="flex items-center mb-8 p-4 rounded-2xl glass-effect-premium" data-aos="fade-down">
-                <img src="{{ asset('images/doctor-avatar-premium.jpg') }}" alt="Doctor Avatar"
-                     class="doctor-avatar-premium mr-4 glowing-element">
-                <div>
-                    <h3 class="font-bold text-xl text-white">Dr. Ayesha Rahman</h3>
-                    <p class="text-sm opacity-90">Cardiologist & Head of Department</p>
-                    <div class="flex items-center mt-2">
-                        <div class="w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full mr-2 glow"></div>
-                        <span class="text-xs font-semibold text-green-300">● ONLINE NOW</span>
-                    </div>
-                </div>
+<!-- Hero Section -->
+<section class="doctor-portal-hero py-20 relative">
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full mb-6">
+                <div class="live-indicator-dot"></div>
+                <span class="text-white font-bold">{{ count($doctors ?? []) }} Doctors Online Now</span>
             </div>
+            <h1 class="text-5xl md:text-6xl font-black text-white mb-6 font-vietnam">
+                Connect with Expert Doctors
+                <span class="block text-gradient-light mt-2">Anytime, Anywhere</span>
+            </h1>
+            <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+                Get instant medical consultation through audio, video, or text with our certified healthcare professionals
+            </p>
+        </div>
 
-            <!-- Premium Navigation -->
-            <nav class="flex-1 space-y-1">
-                <a href="#dashboard" @click="setActive('dashboard')"
-                   class="nav-item-premium" :class="{ 'active': activeTab === 'dashboard' }" data-aos="fade-right" data-aos-delay="100">
-                    <div class="nav-icon-premium">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <span class="font-semibold">Dashboard</span>
-                    <span class="ml-auto text-xs opacity-70">Ctrl+1</span>
-                </a>
-
-                <a href="#onboard-doctors" @click="setActive('onboard-doctors')"
-                   class="nav-item-premium" :class="{ 'active': activeTab === 'onboard-doctors' }" data-aos="fade-right" data-aos-delay="150">
-                    <div class="nav-icon-premium relative">
-                        <i class="fas fa-user-md"></i>
-                        <span x-show="newDoctors > 0" class="notification-badge-premium">{{ $newDoctors ?? 5 }}</span>
-                    </div>
-                    <span class="font-semibold">Live Doctors</span>
-                    <span x-show="newDoctors > 0"
-                          class="ml-auto bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full px-2 py-1 font-bold">
-                        {{ $newDoctors ?? 5 }} NEW
-                    </span>
-                </a>
-
-                <a href="#telemedicine" @click="setActive('telemedicine')"
-                   class="nav-item-premium" :class="{ 'active': activeTab === 'telemedicine' }" data-aos="fade-right" data-aos-delay="200">
-                    <div class="nav-icon-premium">
-                        <i class="fas fa-video"></i>
-                    </div>
-                    <span class="font-semibold">Telemedicine</span>
-                    <span class="ml-auto text-xs bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">PREMIUM</span>
-                </a>
-
-                <a href="#community" @click="setActive('community')"
-                   class="nav-item-premium" :class="{ 'active': activeTab === 'community' }" data-aos="fade-right" data-aos-delay="250">
-                    <div class="nav-icon-premium">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <span class="font-semibold">Doctor Community</span>
-                    <span class="ml-auto text-xs opacity-70">HOT</span>
-                </a>
-
-                <a href="#emergency" @click="setActive('emergency')"
-                   class="nav-item-premium" :class="{ 'active': activeTab === 'emergency' }" data-aos="fade-right" data-aos-delay="300">
-                    <div class="nav-icon-premium relative">
-                        <i class="fas fa-ambulance"></i>
-                        <span x-show="emergencyRequests > 0" class="notification-badge-premium">{{ $emergencyRequests ?? 2 }}</span>
-                    </div>
-                    <span class="font-semibold">Emergency Services</span>
-                    <span x-show="emergencyRequests > 0"
-                          class="ml-auto bg-gradient-to-r from-red-600 to-orange-500 text-white text-xs rounded-full px-2 py-1 font-bold animate-pulse">
-                        URGENT
-                    </span>
-                </a>
-
-                <a href="#premium-services" @click="setActive('premium-services')"
-                   class="nav-item-premium" :class="{ 'active': activeTab === 'premium-services' }" data-aos="fade-right" data-aos-delay="350">
-                    <div class="nav-icon-premium">
-                        <i class="fas fa-crown"></i>
-                    </div>
-                    <span class="font-semibold">Premium Services</span>
-                    <span class="ml-auto text-xs bg-gradient-to-r from-yellow-500 to-orange-500 text-transparent bg-clip-text">EXCLUSIVE</span>
-                </a>
-
-                <a href="#analytics" @click="setActive('analytics')"
-                   class="nav-item-premium" :class="{ 'active': activeTab === 'analytics' }" data-aos="fade-right" data-aos-delay="400">
-                    <div class="nav-icon-premium">
-                        <i class="fas fa-chart-pie"></i>
-                    </div>
-                    <span class="font-semibold">AI Analytics</span>
-                </a>
-
-                <a href="#revenue" @click="setActive('revenue')"
-                   class="nav-item-premium" :class="{ 'active': activeTab === 'revenue' }" data-aos="fade-right" data-aos-delay="450">
-                    <div class="nav-icon-premium">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <span class="font-semibold">Revenue Dashboard</span>
-                </a>
-            </nav>
-
-            <!-- Premium Quick Stats -->
-            <div class="mt-8 pt-8 border-t border-white/10">
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="text-center p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-transparent">
-                        <div class="text-2xl font-bold text-white">৳12,540</div>
-                        <div class="text-xs opacity-70">Today's Revenue</div>
-                    </div>
-                    <div class="text-center p-3 rounded-xl bg-gradient-to-br from-green-500/20 to-transparent">
-                        <div class="text-2xl font-bold text-white">28</div>
-                        <div class="text-xs opacity-70">Consultations</div>
-                    </div>
-                </div>
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center">
+                <div class="text-4xl font-black text-white mb-2">24/7</div>
+                <div class="text-blue-100 font-medium">Available</div>
             </div>
-
-            <!-- Sidebar Toggle -->
-            <button @click="toggleSidebar()"
-                    class="absolute -right-3 top-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white w-8 h-8 rounded-full shadow-xl flex items-center justify-center hover:shadow-2xl transition-all duration-300 z-10">
-                <i class="fas text-sm" :class="collapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
-            </button>
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center">
+                <div class="text-4xl font-black text-white mb-2">100+</div>
+                <div class="text-blue-100 font-medium">Expert Doctors</div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center">
+                <div class="text-4xl font-black text-white mb-2">50k+</div>
+                <div class="text-blue-100 font-medium">Consultations</div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center">
+                <div class="text-4xl font-black text-white mb-2">4.9⭐</div>
+                <div class="text-blue-100 font-medium">Average Rating</div>
+            </div>
         </div>
     </div>
+</section>
 
-    <!-- Premium Main Content -->
-    <div class="main-content-premium flex-1 overflow-y-auto premium-scrollbar">
-        <!-- Premium Top Bar -->
-        <div class="flex justify-between items-center mb-8">
+<!-- Emergency Banner -->
+<section class="container mx-auto px-4 -mt-10 relative z-20">
+    <div class="emergency-banner">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+            <div class="text-center md:text-left">
+                <h3 class="text-3xl font-black mb-3 flex items-center justify-center md:justify-start gap-3">
+                    <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                    </svg>
+                    Need Urgent Medical Help?
+                </h3>
+                <p class="text-lg text-red-100 mb-4">Get instant emergency consultation or request home visit within 30 minutes</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <button onclick="#" class="btn-base bg-white text-red-600 hover:bg-red-50 px-8 py-4 text-lg whitespace-nowrap">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                    </svg>
+                    Emergency Call
+                </button>
+                <button onclick="#" class="btn-outline-premium bg-white border-2 border-white text-red-600 hover:bg-red-50 px-8 py-4 text-lg whitespace-nowrap">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                    Home Visit
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filter Section -->
+<section class="container mx-auto px-4 mt-16" x-data="doctorPortal()">
+    <div class="filter-section">
+        <div class="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
             <div>
-                <h1 class="text-4xl font-bold text-white mb-2" x-text="getActiveTabTitle()"></h1>
-                <p class="text-gray-300" x-text="getActiveTabSubtitle()"></p>
+                <h3 class="text-2xl font-black text-gray-900 mb-2">Find Your Doctor</h3>
+                <p class="text-gray-600">Filter by specialty, availability, or rating</p>
             </div>
 
-            <div class="flex items-center space-x-4">
-                <!-- Premium Search -->
-                <div class="relative w-96">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-gray-400"></i>
-                    </div>
-                    <input type="text"
-                           placeholder="Search doctors, patients, medical records..."
-                           class="search-input-premium">
-                </div>
-
-                <!-- Premium Notifications -->
-                <div class="relative">
-                    <button @click="toggleNotifications()"
-                            class="w-12 h-12 rounded-full glass-effect-premium flex items-center justify-center hover:shadow-xl transition-all duration-300 relative">
-                        <i class="fas fa-bell text-xl text-blue-300"></i>
-                        <span x-show="unreadNotifications > 0"
-                              class="notification-badge-premium">{{ $unreadNotifications ?? 8 }}</span>
-                    </button>
-                </div>
-
-                <!-- Mobile Menu Toggle -->
-                <button @click="mobileMenuOpen = !mobileMenuOpen"
-                        class="lg:hidden w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center shadow-xl hover:shadow-2xl transition-all">
-                    <i class="fas fa-bars"></i>
+            <div class="flex flex-wrap gap-3">
+                <button @click="filterSpecialty = 'all'"
+                        :class="{'active': filterSpecialty === 'all'}"
+                        class="filter-btn">
+                    All Doctors
+                </button>
+                <button @click="filterSpecialty = 'cardiology'"
+                        :class="{'active': filterSpecialty === 'cardiology'}"
+                        class="filter-btn">
+                    Cardiology
+                </button>
+                <button @click="filterSpecialty = 'pediatrics'"
+                        :class="{'active': filterSpecialty === 'pediatrics'}"
+                        class="filter-btn">
+                    Pediatrics
+                </button>
+                <button @click="filterSpecialty = 'dermatology'"
+                        :class="{'active': filterSpecialty === 'dermatology'}"
+                        class="filter-btn">
+                    Dermatology
+                </button>
+                <button @click="filterSpecialty = 'neurology'"
+                        :class="{'active': filterSpecialty === 'neurology'}"
+                        class="filter-btn">
+                    Neurology
+                </button>
+                <button @click="filterSpecialty = 'orthopedics'"
+                        :class="{'active': filterSpecialty === 'orthopedics'}"
+                        class="filter-btn">
+                    Orthopedics
                 </button>
             </div>
         </div>
 
-        <!-- Dashboard Tab -->
-        <div x-show="activeTab === 'dashboard'" class="space-y-8">
-            <!-- Premium Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="stat-card-premium" data-aos="fade-up" data-aos-delay="100">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-sm opacity-90 mb-2">TODAY'S CONSULTATIONS</p>
-                            <h2 class="stat-number-premium">12</h2>
-                        </div>
-                        <i class="fas fa-video text-3xl opacity-60"></i>
-                    </div>
-                    <p class="text-xs mt-4 opacity-80 flex items-center">
-                        <i class="fas fa-arrow-up text-green-400 mr-2"></i>
-                        20% increase from yesterday
-                    </p>
-                </div>
+        <div class="mt-6 flex flex-col sm:flex-row gap-4">
+            <div class="relative flex-1">
+                <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text"
+                       x-model="searchQuery"
+                       placeholder="Search by doctor name, specialty, or condition..."
+                       class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all">
+            </div>
+            <select x-model="sortBy" class="px-6 py-4 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all font-semibold">
+                <option value="rating">Highest Rated</option>
+                <option value="experience">Most Experienced</option>
+                <option value="consultations">Most Consultations</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+            </select>
+        </div>
+    </div>
 
-                <div class="stat-card-premium green" data-aos="fade-up" data-aos-delay="150">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-sm opacity-90 mb-2">TOTAL REVENUE</p>
-                            <h2 class="stat-number-premium">৳12,540</h2>
+    <!-- Live Doctors Grid -->
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-8 mt-8">
+        <!-- Doctor Card 1 -->
+        <div class="doctor-card-premium p-8">
+            <div class="flex items-start justify-between mb-6">
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <img src="/images/doctors/dr-rahman.jpg"
+                             alt="Dr. Ahmed Rahman"
+                             class="doctor-avatar"
+                             onerror="this.src='https://ui-avatars.com/api/?name=Ahmed+Rahman&size=120&background=3b82f6&color=fff&bold=true'">
+                        <div class="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-2">
+                            <svg class="w-4 h-4 text-white online-indicator" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
                         </div>
-                        <i class="fas fa-wallet text-3xl opacity-60"></i>
                     </div>
-                    <p class="text-xs mt-4 opacity-80 flex items-center">
-                        <i class="fas fa-chart-line text-emerald-400 mr-2"></i>
-                        ৳3,240 from video calls
-                    </p>
                 </div>
-
-                <div class="stat-card-premium purple" data-aos="fade-up" data-aos-delay="200">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-sm opacity-90 mb-2">ACTIVE PATIENTS</p>
-                            <h2 class="stat-number-premium">148</h2>
-                        </div>
-                        <i class="fas fa-user-injured text-3xl opacity-60"></i>
+                <div class="text-right">
+                    <div class="inline-flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm mb-2">
+                        <div class="live-indicator-dot w-2 h-2"></div>
+                        LIVE
                     </div>
-                    <p class="text-xs mt-4 opacity-80 flex items-center">
-                        <i class="fas fa-user-plus text-purple-400 mr-2"></i>
-                        5 new this week
-                    </p>
-                </div>
-
-                <div class="stat-card-premium orange" data-aos="fade-up" data-aos-delay="250">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-sm opacity-90 mb-2">AVG. WAIT TIME</p>
-                            <h2 class="stat-number-premium">15m</h2>
-                        </div>
-                        <i class="fas fa-clock text-3xl opacity-60"></i>
-                    </div>
-                    <p class="text-xs mt-4 opacity-80 flex items-center">
-                        <i class="fas fa-arrow-down text-amber-400 mr-2"></i>
-                        5m below average
-                    </p>
+                    <div class="text-sm text-gray-500">Available Now</div>
                 </div>
             </div>
 
-            <!-- Live Doctors Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Live Doctors Card -->
-                <div class="dashboard-card-premium lg:col-span-2" data-aos="fade-up">
-                    <div class="flex justify-between items-center mb-6">
-                        <div>
-                            <h3 class="text-2xl font-bold text-white mb-2">Live Doctors Online</h3>
-                            <p class="text-gray-300">Real-time availability of healthcare professionals</p>
-                        </div>
-                        <a href="#onboard-doctors" @click="setActive('onboard-doctors')"
-                           class="btn-request-premium text-sm px-4 py-2">
-                            View All <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
+            <div class="mb-6">
+                <h3 class="text-2xl font-black text-gray-900 mb-2">Dr. Ahmed Rahman</h3>
+                <div class="specialty-badge mb-3">
+                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                    </svg>
+                    Cardiology Specialist
+                </div>
+                <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                    <div class="flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                        15 years exp.
                     </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        @foreach([
-                            ['name' => 'Dr. Rahman Ahmed', 'spec' => 'Cardiologist', 'rating' => 4.9, 'price' => '৳100/200'],
-                            ['name' => 'Dr. Fatima Begum', 'spec' => 'Pediatrician', 'rating' => 4.8, 'price' => '৳80/150'],
-                            ['name' => 'Dr. Karim Hossain', 'spec' => 'Neurologist', 'rating' => 4.7, 'price' => '৳120/250'],
-                            ['name' => 'Dr. Sofia Akter', 'spec' => 'Gynecologist', 'rating' => 4.9, 'price' => '৳90/180']
-                        ] as $doctor)
-                        <div class="doctor-card-premium" data-aos="zoom-in">
-                            <div class="relative">
-                                <div class="online-badge"></div>
-                                <img src="{{ asset('images/doctor-' . $loop->iteration . '.jpg') }}"
-                                     alt="{{ $doctor['name'] }}" class="doctor-avatar-premium mx-auto mb-4">
-                            </div>
-                            <h4 class="text-lg font-bold text-white text-center mb-1">{{ $doctor['name'] }}</h4>
-                            <p class="text-sm text-gray-300 text-center mb-2">{{ $doctor['spec'] }}</p>
-
-                            <div class="flex justify-center items-center mb-3">
-                                <div class="rating-stars-premium">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        <i class="fas fa-star star-premium {{ $i <= round($doctor['rating']) ? 'filled' : '' }}"></i>
-                                    @endfor
-                                </div>
-                                <span class="text-sm text-amber-400 ml-2 font-bold">{{ $doctor['rating'] }}</span>
-                            </div>
-
-                            <div class="text-center mb-4">
-                                <span class="text-xs text-gray-400">Audio/Video: </span>
-                                <span class="text-sm font-bold text-gradient-premium">{{ $doctor['price'] }}</span>
-                            </div>
-
-                            <div class="flex justify-center space-x-3">
-                                <button class="call-action-btn audio" title="Audio Call (৳100)">
-                                    <i class="fas fa-phone"></i>
-                                </button>
-                                <button class="call-action-btn video" title="Video Call (৳200)">
-                                    <i class="fas fa-video"></i>
-                                </button>
-                                <button class="call-action-btn message" title="Message">
-                                    <i class="fas fa-comment-medical"></i>
-                                </button>
-                            </div>
-                        </div>
-                        @endforeach
+                    <div class="flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                        </svg>
+                        3,247 consultations
                     </div>
                 </div>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="rating-stars">
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                    </div>
+                    <span class="font-bold text-gray-900">4.9 <span class="text-gray-500 font-normal">(1,234 reviews)</span></span>
+                </div>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    MBBS, MD (Cardiology), FCPS. Specialist in heart diseases, hypertension, and cardiac emergencies.
+                </p>
+            </div>
 
-                <!-- Premium Services Quick Access -->
-                <div class="dashboard-card-premium" data-aos="fade-up" data-aos-delay="200">
-                    <h3 class="text-2xl font-bold text-white mb-6">Premium Services</h3>
-
-                    <div class="space-y-4">
-                        <div class="service-card-premium" data-aos="zoom-in">
-                            <div class="service-icon-premium">
-                                <i class="fas fa-user-md"></i>
-                            </div>
-                            <h4 class="text-xl font-bold text-white mb-2">Long-term Assessment</h4>
-                            <p class="text-gray-300 text-sm mb-4">Personalized healthcare monitoring</p>
-                            <button class="btn-request-premium w-full">
-                                Request Service
-                            </button>
-                        </div>
-
-                        <div class="service-card-premium" data-aos="zoom-in" data-aos-delay="100">
-                            <div class="service-icon-premium bg-gradient-to-r from-purple-500 to-pink-500">
-                                <i class="fas fa-ambulance"></i>
-                            </div>
-                            <h4 class="text-xl font-bold text-white mb-2">Emergency Home Care</h4>
-                            <p class="text-gray-300 text-sm mb-4">24/7 emergency medical service</p>
-                            <button class="btn-request-premium emergency w-full">
-                                Emergency Request
-                            </button>
-                        </div>
+            <div class="border-t border-gray-200 pt-6 mb-6">
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div>
+                        <div class="text-2xl font-black text-green-600 mb-1">৳100</div>
+                        <div class="text-xs text-gray-600">Audio Call</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-black text-blue-600 mb-1">৳200</div>
+                        <div class="text-xs text-gray-600">Video Call</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Doctor Community & Analytics -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Doctor Community -->
-                <div class="community-card-premium" data-aos="fade-right">
-                    <h3 class="text-2xl font-bold text-white mb-6">Doctor Community</h3>
-                    <p class="text-gray-300 mb-6">Join discussions about medical technology, risk management, and advanced treatments</p>
-
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
-                                    <i class="fas fa-brain text-white"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-white">AI in Cardiology</h4>
-                                    <p class="text-sm text-gray-400">Dr. Rahman Ahmed • 45 participants</p>
-                                </div>
-                            </div>
-                            <span class="text-xs bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full">LIVE</span>
-                        </div>
-
-                        <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center">
-                                    <i class="fas fa-shield-virus text-white"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-white">Pandemic Preparedness</h4>
-                                    <p class="text-sm text-gray-400">Dr. Fatima Begum • 32 participants</p>
-                                </div>
-                            </div>
-                            <span class="text-xs bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-1 rounded-full">ACTIVE</span>
-                        </div>
-                    </div>
-
-                    <button @click="joinCommunity()" class="btn-request-premium w-full mt-6">
-                        <i class="fas fa-users mr-2"></i> Join Community Discussion
+            <div class="space-y-3">
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="startConsultation('audio', 1)" class="consultation-btn consultation-btn-audio">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                        Audio
+                    </button>
+                    <button onclick="startConsultation('video', 1)" class="consultation-btn consultation-btn-video">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+                        </svg>
+                        Video
                     </button>
                 </div>
-
-                <!-- Revenue Analytics -->
-                <div class="dashboard-card-premium" data-aos="fade-left">
-                    <h3 class="text-2xl font-bold text-white mb-6">Revenue Analytics</h3>
-
-                    <div class="space-y-6">
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-gray-300">Audio Consultations</span>
-                                <span class="font-bold text-white">৳4,200</span>
-                            </div>
-                            <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full" style="width: 70%"></div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-gray-300">Video Consultations</span>
-                                <span class="font-bold text-white">৳8,340</span>
-                            </div>
-                            <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" style="width: 85%"></div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-gray-300">Emergency Services</span>
-                                <span class="font-bold text-white">৳3,500</span>
-                            </div>
-                            <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-red-500 to-orange-500 rounded-full" style="width: 55%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <button onclick="startConsultation('text', 1)" class="consultation-btn consultation-btn-text w-full">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"/>
+                    </svg>
+                    Start Text Chat
+                </button>
+                <button onclick="requestPersonalDoctor(1)" class="btn-outline-premium w-full">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Request as Personal Doctor
+                </button>
             </div>
         </div>
 
-        <!-- Onboard Doctors Tab -->
-        <div x-show="activeTab === 'onboard-doctors'" class="space-y-8" data-aos="fade-up">
-            <div class="dashboard-card-premium">
-                <div class="flex justify-between items-center mb-8">
+        <!-- Doctor Card 2 -->
+        <div class="doctor-card-premium p-8">
+            <div class="flex items-start justify-between mb-6">
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <img src="/images/doctors/dr-sultana.jpg"
+                             alt="Dr. Fatima Sultana"
+                             class="doctor-avatar"
+                             onerror="this.src='https://ui-avatars.com/api/?name=Fatima+Sultana&size=120&background=8b5cf6&color=fff&bold=true'">
+                        <div class="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-2">
+                            <svg class="w-4 h-4 text-white online-indicator" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="inline-flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm mb-2">
+                        <div class="live-indicator-dot w-2 h-2"></div>
+                        LIVE
+                    </div>
+                    <div class="text-sm text-gray-500">Available Now</div>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-2xl font-black text-gray-900 mb-2">Dr. Fatima Sultana</h3>
+                <div class="specialty-badge mb-3">
+                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"/>
+                    </svg>
+                    Pediatrics & Child Care
+                </div>
+                <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                    <div class="flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                        12 years exp.
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                        </svg>
+                        2,891 consultations
+                    </div>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="rating-stars">
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                    </div>
+                    <span class="font-bold text-gray-900">4.8 <span class="text-gray-500 font-normal">(987 reviews)</span></span>
+                </div>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    MBBS, DCH, FCPS (Pediatrics). Expert in child health, vaccinations, growth & development.
+                </p>
+            </div>
+
+            <div class="border-t border-gray-200 pt-6 mb-6">
+                <div class="grid grid-cols-2 gap-4 text-center">
                     <div>
-                        <h3 class="text-3xl font-bold text-white mb-2">Live Doctors Network</h3>
-                        <p class="text-gray-300">Connect with healthcare professionals in real-time</p>
+                        <div class="text-2xl font-black text-green-600 mb-1">৳100</div>
+                        <div class="text-xs text-gray-600">Audio Call</div>
                     </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="relative">
-                            <div class="w-3 h-3 bg-green-500 rounded-full animate-ping absolute"></div>
-                            <div class="w-3 h-3 bg-green-500 rounded-full relative"></div>
-                        </div>
-                        <span class="text-green-400 font-bold">24 Doctors Online</span>
+                    <div>
+                        <div class="text-2xl font-black text-blue-600 mb-1">৳200</div>
+                        <div class="text-xs text-gray-600">Video Call</div>
                     </div>
                 </div>
+            </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach([
-                        ['name' => 'Dr. Rahman Ahmed', 'spec' => 'Cardiologist', 'rating' => 4.9, 'exp' => '15 years', 'audio' => '৳100', 'video' => '৳200'],
-                        ['name' => 'Dr. Fatima Begum', 'spec' => 'Pediatrician', 'rating' => 4.8, 'exp' => '12 years', 'audio' => '৳80', 'video' => '৳150'],
-                        ['name' => 'Dr. Karim Hossain', 'spec' => 'Neurologist', 'rating' => 4.7, 'exp' => '18 years', 'audio' => '৳120', 'video' => '৳250'],
-                        ['name' => 'Dr. Sofia Akter', 'spec' => 'Gynecologist', 'rating' => 4.9, 'exp' => '10 years', 'audio' => '৳90', 'video' => '৳180'],
-                        ['name' => 'Dr. Mahmud Hasan', 'spec' => 'Orthopedic', 'rating' => 4.6, 'exp' => '20 years', 'audio' => '৳110', 'video' => '৳220'],
-                        ['name' => 'Dr. Nusrat Jahan', 'spec' => 'Dermatologist', 'rating' => 4.8, 'exp' => '8 years', 'audio' => '৳95', 'video' => '৳190']
-                    ] as $doctor)
-                    <div class="doctor-card-premium" data-aos="zoom-in" data-aos-delay="{{ $loop->index * 100 }}">
-                        <div class="flex items-center mb-4">
-                            <img src="{{ asset('images/doctor-' . ($loop->iteration % 4 + 1) . '.jpg') }}"
-                                 alt="{{ $doctor['name'] }}" class="doctor-avatar-premium">
-                            <div class="ml-4">
-                                <h4 class="text-lg font-bold text-white">{{ $doctor['name'] }}</h4>
-                                <p class="text-sm text-gray-300">{{ $doctor['spec'] }}</p>
-                                <div class="flex items-center mt-1">
-                                    <div class="rating-stars-premium">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <i class="fas fa-star star-premium {{ $i <= round($doctor['rating']) ? 'filled' : '' }}"></i>
-                                        @endfor
-                                    </div>
-                                    <span class="text-sm text-amber-400 ml-2 font-bold">{{ $doctor['rating'] }}</span>
-                                </div>
-                            </div>
-                            <div class="online-badge"></div>
-                        </div>
-
-                        <div class="space-y-3">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-400">Experience:</span>
-                                <span class="text-white font-semibold">{{ $doctor['exp'] }}</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-400">Audio Call:</span>
-                                <span class="text-green-400 font-bold">{{ $doctor['audio'] }}</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-400">Video Call:</span>
-                                <span class="text-purple-400 font-bold">{{ $doctor['video'] }}</span>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-between mt-6">
-                            <button class="call-action-btn audio" title="Audio Call">
-                                <i class="fas fa-phone"></i>
-                            </button>
-                            <button class="call-action-btn video" title="Video Call">
-                                <i class="fas fa-video"></i>
-                            </button>
-                            <button class="call-action-btn message" title="Message">
-                                <i class="fas fa-comment-medical"></i>
-                            </button>
-                            <button class="btn-request-premium text-xs px-3 py-2">
-                                <i class="fas fa-user-plus mr-1"></i> Follow
-                            </button>
-                        </div>
-                    </div>
-                    @endforeach
+            <div class="space-y-3">
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="startConsultation('audio', 2)" class="consultation-btn consultation-btn-audio">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                        Audio
+                    </button>
+                    <button onclick="startConsultation('video', 2)" class="consultation-btn consultation-btn-video">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+                        </svg>
+                        Video
+                    </button>
                 </div>
+                <button onclick="startConsultation('text', 2)" class="consultation-btn consultation-btn-text w-full">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"/>
+                    </svg>
+                    Start Text Chat
+                </button>
+                <button onclick="requestPersonalDoctor(2)" class="btn-outline-premium w-full">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Request as Personal Doctor
+                </button>
             </div>
         </div>
 
-        <!-- Other tabs content... -->
-        <!-- (Telemedicine, Community, Emergency, Premium Services tabs would follow similar premium structure) -->
+        <!-- Doctor Card 3 -->
+        <div class="doctor-card-premium p-8">
+            <div class="flex items-start justify-between mb-6">
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <img src="/images/doctors/dr-khan.jpg"
+                             alt="Dr. Khalid Khan"
+                             class="doctor-avatar"
+                             onerror="this.src='https://ui-avatars.com/api/?name=Khalid+Khan&size=120&background=10b981&color=fff&bold=true'">
+                        <div class="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-2">
+                            <svg class="w-4 h-4 text-white online-indicator" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="inline-flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm mb-2">
+                        <div class="live-indicator-dot w-2 h-2"></div>
+                        LIVE
+                    </div>
+                    <div class="text-sm text-gray-500">Available Now</div>
+                </div>
+            </div>
 
+            <div class="mb-6">
+                <h3 class="text-2xl font-black text-gray-900 mb-2">Dr. Khalid Khan</h3>
+                <div class="specialty-badge mb-3">
+                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-2 0c0 .993-.241 1.929-.668 2.754l-1.524-1.525a3.997 3.997 0 00.078-2.183l1.562-1.562C15.802 8.249 16 9.1 16 10zm-5.165 3.913l1.58 1.58A5.98 5.98 0 0110 16a5.976 5.976 0 01-2.516-.552l1.562-1.562a4.006 4.006 0 001.789.027zm-4.677-2.796a4.002 4.002 0 01-.041-2.08l-.08.08-1.53-1.533A5.98 5.98 0 004 10c0 .954.223 1.856.619 2.657l1.54-1.54zm1.088-6.45A5.974 5.974 0 0110 4c.954 0 1.856.223 2.657.619l-1.54 1.54a4.002 4.002 0 00-2.346.033L7.246 4.668zM12 10a2 2 0 11-4 0 2 2 0 014 0z" clip-rule="evenodd"/>
+                    </svg>
+                    Dermatology & Skin Care
+                </div>
+                <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                    <div class="flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                        10 years exp.
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                        </svg>
+                        2,156 consultations
+                    </div>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="rating-stars">
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                    </div>
+                    <span class="font-bold text-gray-900">4.9 <span class="text-gray-500 font-normal">(756 reviews)</span></span>
+                </div>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    MBBS, DDV (Dermatology). Specialist in acne, eczema, psoriasis, and cosmetic dermatology.
+                </p>
+            </div>
+
+            <div class="border-t border-gray-200 pt-6 mb-6">
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div>
+                        <div class="text-2xl font-black text-green-600 mb-1">৳100</div>
+                        <div class="text-xs text-gray-600">Audio Call</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-black text-blue-600 mb-1">৳200</div>
+                        <div class="text-xs text-gray-600">Video Call</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="startConsultation('audio', 3)" class="consultation-btn consultation-btn-audio">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                        Audio
+                    </button>
+                    <button onclick="startConsultation('video', 3)" class="consultation-btn consultation-btn-video">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+                        </svg>
+                        Video
+                    </button>
+                </div>
+                <button onclick="startConsultation('text', 3)" class="consultation-btn consultation-btn-text w-full">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"/>
+                    </svg>
+                    Start Text Chat
+                </button>
+                <button onclick="requestPersonalDoctor(3)" class="btn-outline-premium w-full">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Request as Personal Doctor
+                </button>
+            </div>
+        </div>
+
+        <!-- Add more doctor cards as needed -->
     </div>
-</div>
+
+    <!-- Load More Button -->
+    <div class="text-center mt-12">
+        <button class="btn-primary px-8 py-4 text-lg">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            Load More Doctors
+        </button>
+    </div>
+</section>
+
+<!-- Premium Services Section -->
+<section class="container mx-auto px-4 mt-20">
+    <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-4">Premium Healthcare Services</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Exclusive long-term care and personalized health management
+        </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8">
+        <!-- Personal Doctor Program -->
+        <div class="premium-service-card">
+            <div class="relative z-10">
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+                    <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <span class="text-white font-bold text-sm">PREMIUM</span>
+                </div>
+                <h3 class="text-3xl font-black mb-4">Personal Doctor Program</h3>
+                <p class="text-gray-300 mb-6 leading-relaxed">
+                    Get a dedicated personal doctor who knows your complete medical history and provides ongoing care tailored to your needs.
+                </p>
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-green-400 shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <div class="font-bold text-lg">Unlimited Consultations</div>
+                            <div class="text-gray-400 text-sm">Call, video, or chat anytime - no extra charges</div>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-green-400 shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <div class="font-bold text-lg">Priority Response</div>
+                            <div class="text-gray-400 text-sm">Get answers within 15 minutes, 24/7</div>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-green-400 shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <div class="font-bold text-lg">Preventive Care Plans</div>
+                            <div class="text-gray-400 text-sm">Personalized health tracking & screening schedules</div>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-green-400 shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <div class="font-bold text-lg">Specialist Coordination</div>
+                            <div class="text-gray-400 text-sm">Seamless referrals when specialist care is needed</div>
+                        </div>
+                    </li>
+                </ul>
+                <button onclick="#" class="btn-base bg-white text-gray-900 hover:bg-gray-100 w-full text-lg">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                    </svg>
+                    Request Personal Doctor
+                </button>
+            </div>
+        </div>
+
+        <!-- Emergency Home Visit -->
+        <div class="premium-service-card">
+            <div class="relative z-10">
+                <div class="inline-flex items-center gap-2 bg-red-500/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+                    <svg class="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-red-400 font-bold text-sm">EMERGENCY</span>
+                </div>
+                <h3 class="text-3xl font-black mb-4">Emergency Home Visits</h3>
+                <p class="text-gray-300 mb-6 leading-relaxed">
+                    When you can't travel, we bring expert medical care to your doorstep within 30-60 minutes.
+                </p>
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-green-400 shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <div class="font-bold text-lg">Rapid Response</div>
+                            <div class="text-gray-400 text-sm">Doctor arrives within 30-60 minutes</div>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-green-400 shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <div class="font-bold text-lg">Complete Medical Kit</div>
+                            <div class="text-gray-400 text-sm">Equipped with diagnostic tools & emergency meds</div>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-green-400 shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <div class="font-bold text-lg">Hospital Coordination</div>
+                            <div class="text-gray-400 text-sm">Seamless admission if hospitalization needed</div>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-green-400 shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <div class="font-bold text-lg">Follow-up Care</div>
+                            <div class="text-gray-400 text-sm">Free virtual follow-up within 24 hours</div>
+                        </div>
+                    </li>
+                </ul>
+                <button onclick="#" class="btn-base bg-red-500 text-white hover:bg-red-600 w-full text-lg">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                    Request Emergency Visit
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Doctor Community Section -->
+<section class="container mx-auto px-4 mt-20 mb-20">
+    <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-4">Doctor Community Hub</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Join the conversation where medical professionals discuss future healthcare trends and innovations
+        </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+        <!-- Community Discussion Card -->
+        <div class="community-card">
+            <div class="flex items-center justify-between mb-4">
+                <div class="bg-purple-100 p-3 rounded-xl">
+                    <svg class="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"/>
+                        <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"/>
+                    </svg>
+                </div>
+                <span class="text-sm font-bold text-purple-600 bg-purple-100 px-3 py-1 rounded-full">125 Active</span>
+            </div>
+            <h3 class="text-xl font-black text-gray-900 mb-3">Risk Management Forum</h3>
+            <p class="text-gray-600 mb-4">
+                Collaborative discussions on patient safety, clinical decision making, and emerging health risks.
+            </p>
+            <button onclick="#" class="btn-secondary w-full">
+                Join Discussion
+            </button>
+        </div>
+
+        <!-- Medical Technology Card -->
+        <div class="community-card">
+            <div class="flex items-center justify-between mb-4">
+                <div class="bg-blue-100 p-3 rounded-xl">
+                    <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="text-sm font-bold text-blue-600 bg-blue-100 px-3 py-1 rounded-full">89 Active</span>
+            </div>
+            <h3 class="text-xl font-black text-gray-900 mb-3">Medical Tech Innovation</h3>
+            <p class="text-gray-600 mb-4">
+                Explore AI diagnostics, telemedicine advances, and cutting-edge medical devices revolutionizing care.
+            </p>
+            <button onclick="#" class="btn-secondary w-full">
+                Explore Innovations
+            </button>
+        </div>
+
+        <!-- Case Studies Card -->
+        <div class="community-card">
+            <div class="flex items-center justify-between mb-4">
+                <div class="bg-green-100 p-3 rounded-xl">
+                    <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="text-sm font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full">203 Cases</span>
+            </div>
+            <h3 class="text-xl font-black text-gray-900 mb-3">Clinical Case Studies</h3>
+            <p class="text-gray-600 mb-4">
+                Learn from real-world cases, share experiences, and collaborate on complex diagnostic challenges.
+            </p>
+            <button onclick="#" class="btn-secondary w-full">
+                Browse Cases
+            </button>
+        </div>
+    </div>
+</section>
 @endsection
 
-@section('scripts')
-<!-- AOS Animation Library -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+@push('scripts')
 <script>
-// Initialize AOS
-AOS.init({
-    duration: 800,
-    once: false,
-    mirror: true
-});
+    // Alpine.js component for doctor portal
+    function doctorPortal() {
+        return {
+            filterSpecialty: 'all',
+            searchQuery: '',
+            sortBy: 'rating',
 
-document.addEventListener('alpine:init', () => {
-    Alpine.data('premiumDoctorPortal', () => ({
-        activeTab: 'dashboard',
-        collapsed: false,
-        mobileMenuOpen: false,
-        showNotifications: false,
-        unreadNotifications: 8,
-        emergencyRequests: 2,
-        newDoctors: 5,
-        unreadMessages: 12,
-
-        init() {
-            console.log('Premium Doctor Portal Initialized');
-            this.setupEventListeners();
-            this.initializePortalFeatures();
-
-            // Auto-refresh doctors online status
-            this.startLiveUpdates();
-        },
-
-        setActive(tab) {
-            this.activeTab = tab;
-            this.mobileMenuOpen = false;
-
-            // Smooth scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // Update browser history
-            history.pushState(null, null, `#${tab}`);
-        },
-
-        toggleSidebar() {
-            this.collapsed = !this.collapsed;
-            window.dispatchEvent(new Event('resize'));
-        },
-
-        toggleNotifications() {
-            this.showNotifications = !this.showNotifications;
-            if (this.showNotifications) {
-                this.unreadNotifications = 0;
-                this.showGlobalNotification('Notifications cleared', 'success');
+            init() {
+                console.log('Doctor Portal Initialized');
             }
-        },
-
-        getActiveTabTitle() {
-            const titles = {
-                'dashboard': 'Premium Dashboard',
-                'onboard-doctors': 'Live Doctors Network',
-                'telemedicine': 'Telemedicine Suite',
-                'community': 'Doctor Community',
-                'emergency': 'Emergency Services',
-                'premium-services': 'Premium Healthcare',
-                'analytics': 'AI Analytics',
-                'revenue': 'Revenue Dashboard'
-            };
-            return titles[this.activeTab] || 'Premium Portal';
-        },
-
-        getActiveTabSubtitle() {
-            const subtitles = {
-                'dashboard': 'Welcome to your premium healthcare command center',
-                'onboard-doctors': 'Real-time connection with healthcare professionals',
-                'telemedicine': 'Advanced virtual healthcare platform',
-                'community': 'Collaborate with medical experts worldwide',
-                'emergency': '24/7 emergency medical response system',
-                'premium-services': 'Exclusive healthcare services & monitoring',
-                'analytics': 'AI-powered insights and predictions',
-                'revenue': 'Track earnings and financial analytics'
-            };
-            return subtitles[this.activeTab] || '';
-        },
-
-        joinCommunity() {
-            this.showGlobalNotification('Joining Doctor Community Discussion...', 'info');
-            this.setActive('community');
-        },
-
-        startAudioCall(doctorName, price) {
-            this.showGlobalNotification(`Initiating audio call with ${doctorName} for ${price}`, 'info');
-            // Implementation for audio call
-        },
-
-        startVideoCall(doctorName, price) {
-            this.showGlobalNotification(`Initiating video consultation with ${doctorName} for ${price}`, 'success');
-            // Implementation for video call
-        },
-
-        sendMessage(doctorName) {
-            this.showGlobalNotification(`Opening chat with ${doctorName}`, 'info');
-            this.setActive('chat');
-        },
-
-        requestEmergency() {
-            if (confirm('Are you sure you want to request emergency medical service?')) {
-                this.showGlobalNotification('Emergency medical team has been dispatched!', 'success');
-                this.emergencyRequests++;
-            }
-        },
-
-        requestLongTermService() {
-            this.showGlobalNotification('Opening long-term service request form...', 'info');
-            this.setActive('premium-services');
-        },
-
-        showGlobalNotification(message, type = 'info') {
-            if (window.ShifaHealthcare && window.ShifaHealthcare.showGlobalNotification) {
-                window.ShifaHealthcare.showGlobalNotification(message, type);
-            } else {
-                // Fallback notification
-                const notification = document.createElement('div');
-                notification.className = `fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg transform transition-all duration-300`;
-                notification.innerHTML = `<div class="text-white">${message}</div>`;
-                document.body.appendChild(notification);
-                setTimeout(() => notification.remove(), 3000);
-            }
-        },
-
-        setupEventListeners() {
-            // Handle browser back/forward buttons
-            window.addEventListener('popstate', () => {
-                const hash = window.location.hash.replace('#', '');
-                if (hash && this.activeTab !== hash) {
-                    this.activeTab = hash;
-                }
-            });
-
-            // Keyboard shortcuts for premium features
-            document.addEventListener('keydown', (e) => {
-                // Ctrl+1 to 9 for tabs
-                if (e.ctrlKey && e.key >= '1' && e.key <= '9') {
-                    e.preventDefault();
-                    const tabs = ['dashboard', 'onboard-doctors', 'telemedicine', 'community',
-                                'emergency', 'premium-services', 'analytics', 'revenue'];
-                    const index = parseInt(e.key) - 1;
-                    if (tabs[index]) {
-                        this.setActive(tabs[index]);
-                    }
-                }
-
-                // Quick actions
-                if (e.key === 'E' && e.ctrlKey) {
-                    e.preventDefault();
-                    this.requestEmergency();
-                }
-
-                if (e.key === 'C' && e.ctrlKey) {
-                    e.preventDefault();
-                    this.joinCommunity();
-                }
-            });
-        },
-
-        initializePortalFeatures() {
-            // Initialize any portal-specific features
-            console.log('Premium features initialized');
-        },
-
-        startLiveUpdates() {
-            // Simulate live updates for doctors online status
-            setInterval(() => {
-                // This would typically fetch from an API
-                this.newDoctors = Math.floor(Math.random() * 3) + 1;
-            }, 30000); // Every 30 seconds
         }
-    }));
-});
+    }
+
+    // Consultation functions
+    function startConsultation(type, doctorId) {
+        const consultationTypes = {
+            'audio': { name: 'Audio Call', price: '৳100' },
+            'video': { name: 'Video Call', price: '৳200' },
+            'text': { name: 'Text Chat', price: '৳50' }
+        };
+
+        const consultation = consultationTypes[type];
+
+        if (confirm(`Start ${consultation.name} consultation for ${consultation.price}?`)) {
+            window.ShifaHealthcare.showGlobalNotification(
+                `Connecting you with the doctor... ${consultation.name} will begin shortly.`,
+                'success',
+                3000
+            );
+
+            // Redirect to consultation page
+            setTimeout(() => {
+                window.location.href = `/consultation/${type}/${doctorId}`;
+            }, 1500);
+        }
+    }
+
+    function requestPersonalDoctor(doctorId) {
+        if (confirm('Request this doctor as your personal healthcare provider? This will give you unlimited consultations and priority care.')) {
+            window.ShifaHealthcare.showGlobalNotification(
+                'Your request has been sent. The doctor will review and respond within 24 hours.',
+                'success',
+                5000
+            );
+
+            // Send request to backend
+            setTimeout(() => {
+                window.location.href = `/personal-doctor/request/${doctorId}`;
+            }, 2000);
+        }
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('🏥 Doctor Portal Page Loaded');
+    });
 </script>
-@endsection
+@endpush
