@@ -686,3 +686,4 @@ function initializeLazyLoading() {
         lazyObserver.observe(element);
     });
 }
+//this is too much
