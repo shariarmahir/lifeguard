@@ -2,13 +2,17 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'LifeGuard+') }} - @yield('title', 'Healing Beyond Boundaries')</title>
+    <title>{{ config('app.name', 'Shifa Healthcare') }} - @yield('title', 'Healing Beyond Boundaries')</title>
+
+    <!-- Preconnect to critical domains -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://unpkg.com">
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800,900" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
@@ -41,25 +45,50 @@
     <!-- Styles -->
     @vite(['resources/css/app.css'])
 
-    <!-- Preload critical resources -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style">
-    <link rel="preload" href="{{ asset('images/hero-bg.jpg') }}" as="image">
-
-    <!-- Google Maps API (will be loaded dynamically) -->
-    <script>
-        window.googleMapsApiKey = '{{ env("GOOGLE_MAPS_API_KEY", "YOUR_GOOGLE_MAPS_API_KEY_HERE") }}';
-    </script>
+    <!-- Critical CSS (inline for above-the-fold content) -->
+    <style>
+        /* Critical styles for initial render */
+        [x-cloak] { display: none !important; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        .sr-only:focus {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            width: auto;
+            height: auto;
+            padding: 0.75rem 1rem;
+            clip: auto;
+            background: #2563eb;
+            color: white;
+            z-index: 10000;
+            border-radius: 0.375rem;
+            text-decoration: none;
+        }
+    </style>
 
     <!-- Additional Head Content -->
     @stack('head')
-
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
 </head>
-<body class="font-inter antialiased bg-white text-gray-900 overflow-x-hidden">
+<body class="font-inter antialiased bg-white text-gray-900">
     <!-- Skip to main content for accessibility -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-md z-50">
+    <a href="#main-content" class="sr-only focus:not-sr-only">
         Skip to main content
     </a>
 
@@ -70,7 +99,7 @@
     @include('components.nav')
 
     <!-- Main Content -->
-    <main id="main-content" class="relative">
+    <main id="main-content" class="relative min-h-screen">
         @yield('content')
     </main>
 
@@ -79,18 +108,19 @@
 
     <!-- Back to Top Button -->
     <div id="back-to-top"
-         class="fixed bottom-8 right-8 z-40 opacity-0 transition-all duration-300">
-        <button onclick="window.ShifaHealthcare.scrollToTop()"
-                class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group">
+         class="fixed bottom-8 right-8 z-40 opacity-0 translate-y-2 invisible transition-all duration-300 ease-out">
+        <button onclick="window.ShifaHealthcare?.scrollToTop?.() || window.scrollTo({top:0,behavior:'smooth'})"
+                class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+                aria-label="Back to top">
             <svg class="w-6 h-6 transform group-hover:-translate-y-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
             </svg>
         </button>
     </div>
 
-    <!-- Loading Overlay -->
+    <!-- Loading Overlay - Improved -->
     <div id="loading-overlay"
-         class="fixed inset-0 bg-gradient-to-br from-blue-50 to-green-50 z-50 flex items-center justify-center hidden">
+         class="fixed inset-0 bg-gradient-to-br from-blue-50 to-green-50 z-50 flex items-center justify-center">
         <div class="text-center space-y-4">
             <div class="relative">
                 <div class="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto"></div>
@@ -103,8 +133,23 @@
         </div>
     </div>
 
-    <!-- Alpine.js -->
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Alpine.js with fallback -->
+    <script>
+        // Load Alpine.js with error handling
+        (function() {
+            var script = document.createElement('script');
+            script.src = 'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js';
+            script.defer = true;
+            script.onerror = function() {
+                // Fallback to local Alpine if CDN fails
+                var fallback = document.createElement('script');
+                fallback.src = '{{ asset("js/alpine.js") }}';
+                fallback.defer = true;
+                document.head.appendChild(fallback);
+            };
+            document.head.appendChild(script);
+        })();
+    </script>
 
     <!-- Main Application Script -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -112,13 +157,44 @@
     <!-- Additional Scripts -->
     @stack('scripts')
 
-    <!-- Performance monitoring -->
+    <!-- Performance monitoring & error handling -->
     <script>
-        // Basic performance monitoring
-        window.addEventListener('load', () => {
-            if ('performance' in window) {
-                const loadTime = performance.now();
-                console.log('Shifa Healthcare - Page loaded in:', Math.round(loadTime) + 'ms');
+        // Error handling
+        window.addEventListener('error', function(e) {
+            console.error('Shifa Healthcare Error:', e.error);
+        });
+
+        // Page load monitoring
+        window.addEventListener('load', function() {
+            // Hide loading overlay
+            var loadingOverlay = document.getElementById('loading-overlay');
+            if (loadingOverlay) {
+                setTimeout(function() {
+                    loadingOverlay.style.opacity = '0';
+                    loadingOverlay.style.transition = 'opacity 0.5s ease';
+                    setTimeout(function() {
+                        loadingOverlay.style.display = 'none';
+                    }, 500);
+                }, 500);
+            }
+
+            // Performance logging
+            if ('performance' in window && performance.timing) {
+                var loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+                console.log('Shifa Healthcare - Page loaded in:', loadTime + 'ms');
+            }
+
+            // Initialize any components that need it
+            if (window.ShifaHealthcare && window.ShifaHealthcare.initComponents) {
+                window.ShifaHealthcare.initComponents();
+            }
+        });
+
+        // Handle back button for mobile menu
+        window.addEventListener('popstate', function() {
+            var appComponent = document.querySelector('[x-data*="app"]');
+            if (appComponent && appComponent.__x && appComponent.__x.$data) {
+                appComponent.__x.$data.closeMobileMenu();
             }
         });
     </script>
