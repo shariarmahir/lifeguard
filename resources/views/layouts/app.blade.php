@@ -14,6 +14,11 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
 
     <!-- SEO Meta Tags -->
     <meta name="description" content="@yield('description', 'Shifa provides AI-powered healthcare services and devices for Bangladesh\'s most underserved populations. Revolutionary medical technology made in Bangladesh.')">
@@ -100,7 +105,7 @@
 
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
+
     <!-- Main Application Script -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
